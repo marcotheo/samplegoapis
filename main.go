@@ -15,25 +15,20 @@ type UserInfo struct {
 }
 
 func pokemonRoutes(subRouter justarouter.SubRouter) {
-	subRouter.POST("/info", func(w http.ResponseWriter, r *http.Request, pp justarouter.PathParams) {
+	subRouter.POST("/info", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, "No Pokemon Info Yet")
 	})
 
-	subRouter.GET("/list", func(w http.ResponseWriter, r *http.Request, pp justarouter.PathParams) {
+	subRouter.GET("/list", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, "No Pokemon List Yet because I'm tired")
 	})
 }
 
 func userRoutes(subRouter justarouter.SubRouter) {
-	subRouter.GET("/:userId", func(w http.ResponseWriter, r *http.Request, pp justarouter.PathParams) {
-		val, err := pp.Get("userId")
-
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
+	subRouter.GET("/{userId}", func(w http.ResponseWriter, r *http.Request) {
+		val := r.PathValue("userId")
 
 		me := UserInfo{
 			Name: "marco",
@@ -60,7 +55,7 @@ func main() {
 	router.AddSubRoutes("/pokemon", pokemonRoutes)
 	router.AddSubRoutes("/user", userRoutes)
 
-	router.POST("/health", func(w http.ResponseWriter, r *http.Request, pp justarouter.PathParams) {
+	router.POST("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, "App is Healthy")
 	})
